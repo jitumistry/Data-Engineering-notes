@@ -1,0 +1,289 @@
+Here are **clean, structured notes** from the Docker full-course video you shared.
+I’ve organized them in a way that helps you revise quickly as a Data Engineer 🚀
+
+---
+
+# 🐳 DOCKER COMPLETE NOTES
+
+---
+
+# 1️⃣ Why Docker?
+
+## Problem Before Docker
+
+* “It works on my machine” issue
+* Dependency conflicts
+* Different OS environments
+* Difficult deployments
+
+## Solution
+
+Docker packages:
+
+* Code
+* Runtime
+* Dependencies
+* System tools
+
+Into one portable unit → **Container**
+
+---
+
+# 2️⃣ Virtual Machine vs Docker
+
+| Virtual Machine | Docker         |
+| --------------- | -------------- |
+| Heavy           | Lightweight    |
+| Has full OS     | Shares host OS |
+| Slower startup  | Fast startup   |
+| GBs in size     | MBs in size    |
+
+Docker uses **containerization**, not virtualization.
+
+---
+
+# 3️⃣ Key Docker Concepts
+
+### 🧱 Image
+
+* Blueprint/template
+* Read-only
+* Used to create containers
+
+Example:
+
+```
+python:3.9-slim
+mysql:8
+```
+
+---
+
+### 📦 Container
+
+* Running instance of image
+* Isolated environment
+* Has its own filesystem, network
+
+---
+
+### 📝 Dockerfile
+
+Text file used to build an image.
+
+Basic structure:
+
+```dockerfile
+FROM python:3.9-slim
+WORKDIR /app
+COPY . .
+RUN pip install -r requirements.txt
+CMD ["python", "app.py"]
+```
+
+---
+
+# 4️⃣ Important Docker Commands
+
+## 🔹 Build Image
+
+```bash
+docker build -t image_name .
+```
+
+## 🔹 Run Container
+
+```bash
+docker run -d -p 5000:5000 image_name
+```
+
+## 🔹 See Running Containers
+
+```bash
+docker ps
+```
+
+## 🔹 Stop Container
+
+```bash
+docker stop container_name
+```
+
+## 🔹 Remove Container
+
+```bash
+docker rm container_name
+```
+
+---
+
+# 5️⃣ Port Mapping
+
+Syntax:
+
+```
+-p host_port:container_port
+```
+
+Example:
+
+```
+-p 5001:5000
+```
+
+Meaning:
+
+* Access from browser → `localhost:5001`
+* Inside container → app runs on `5000`
+
+---
+
+# 6️⃣ Volumes (Data Persistence)
+
+Problem:
+
+* When container stops → data lost
+
+Solution:
+Use volumes.
+
+```bash
+docker volume create my_volume
+```
+
+Run with volume:
+
+```bash
+docker run -v my_volume:/var/lib/mysql mysql
+```
+
+Used heavily in:
+
+* MySQL
+* Postgres
+* Data engineering pipelines
+
+---
+
+# 7️⃣ Docker Networks
+
+Containers communicate via network.
+
+Create network:
+
+```bash
+docker network create my_network
+```
+
+Run container with network:
+
+```bash
+docker run --network my_network
+```
+
+Inside containers, use:
+
+```
+host = service_name
+```
+
+NOT:
+
+* localhost
+* 127.0.0.1
+
+---
+
+# 8️⃣ Docker Compose
+
+Used for **multi-container applications**.
+
+Example:
+
+* Flask
+* MySQL
+* Redis
+
+---
+
+## docker-compose.yml Example
+
+```yaml
+services:
+
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: demopass
+      MYSQL_DATABASE: demodb
+    ports:
+      - "3307:3306"
+
+  app:
+    build: .
+    ports:
+      - "5001:5000"
+    depends_on:
+      - db
+```
+
+Run everything:
+
+```bash
+docker compose up -d
+```
+
+Stop:
+
+```bash
+docker compose down
+```
+
+---
+
+# 9️⃣ Best Practices
+
+✅ Use small base images (`slim`)
+✅ Use `.dockerignore`
+✅ Use JSON CMD format
+✅ Use environment variables
+✅ Remove unnecessary layers
+✅ Use volumes for databases
+✅ Never hardcode secrets
+
+---
+
+# 🔟 Docker for Data Engineers
+
+Docker is used in:
+
+* Airflow
+* Spark
+* Kafka
+* Postgres
+* ETL pipelines
+* Microservices
+* ML model deployment
+
+Real-world example:
+
+```
+Airflow + Postgres + Redis + Worker
+```
+
+All inside Docker Compose.
+
+---
+
+# 🚀 Mental Model
+
+Think like this:
+
+```
+Dockerfile → Image → Container
+```
+
+```
+Multiple Containers → Docker Compose
+```
+
